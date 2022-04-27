@@ -61,8 +61,10 @@ Where a **Projection Reference** is required it may be one of a
 | Method                              | Description                                 |
 |-------------------------------------|---------------------------------------------|
 | projectPointFromWgs84(Output Projection Reference, [x, y]) | Converts a pair of x,y coords in WGS84, into a pair of coords with the requested projection. |
+| projectPointToWgs84(Input Projection Reference, [x, y]) | Converts a pair of x,y coords with a specified projection to WGS84. |
 | projectPoint(Input Projection Reference,  Output Projection Reference, [x, y]) | Converts a pair of x,y coords in a specified projection, into a pair of coords with the requested projection. |
 | projectGeojsonFromWgs84(Output Projection Reference, GeoJsonObject) | Converts a Geojson object in WGS84, to an equivalent object with coordinates in the requested projection. Supports `FeatureCollection`, `Feature`, and `Geometry` objects. |
+| projectGeojsonToWgs84(Input Projection Reference, GeoJsonObject) | Converts a Geojson object in a specified projection, to an equivalent object with coordinates in the WGS84. Supports `FeatureCollection`, `Feature`, and `Geometry` objects. |
 | projectGeojson(Input Projection Reference, Output Projection Reference, GeoJsonObject) | Returns a Geojson object in a specified projection, to an equivalent object with coordinates in the requested projection. Supports `FeatureCollection`, `Feature`, and `Geometry` objects.  |
 | projectGeojson(Input Projection Reference, Output Projection Reference, GeoJsonObject) | Returns a Geojson object in a specified projection, to an equivalent object with coordinates in the requested projection. Supports `FeatureCollection`, `Feature`, and `Geometry` objects.  |
 | getTransformer(Input Projection Reference, Output Projection Reference) | Returns an object with a `forward` and `inverse` function which each take a coordinate to transform. |
