@@ -1,6 +1,7 @@
 import dynamicImportVars from '@rollup/plugin-dynamic-import-vars';
-import strip from '@rollup/plugin-strip';
 import { terser } from "rollup-plugin-terser";
+import commonjs from '@rollup/plugin-commonjs';
+import nodeResolve from '@rollup/plugin-node-resolve';
 
 const output = (input, output, plugins) => ({
   input,
@@ -12,8 +13,8 @@ const output = (input, output, plugins) => ({
 });
 
 export default [
-  output('./lib/index.slim.js', {
-    dir: './dist/slim',
+  output('./lib/ProjClass.js', {
+    dir: './dist/standard',
     format: 'es',
     chunkFileNames: (chunkName) => {
       if (chunkName.facadeModuleId) {
@@ -22,16 +23,23 @@ export default [
       return '[name].js'
     }
   },
-  [dynamicImportVars()]
+    [dynamicImportVars(), terser()]
   ),
-  // output('./lib/index.js', {
-  //   file: './dist/complete/proj4.js'
-  // },
-  // [strip({labels: ['dynamic']})]
-  // ),
-  // output('./lib/index.js', {
-  //   file: './dist/complete/proj4.min.js'
-  // },
-  // [strip({labels: ['dynamic']}), terser()]
-  // )
+  output('./lib/ProjClass.js', {
+    dir: './dist/browserbundle',
+    format: 'es',
+    chunkFileNames: (chunkName) => {
+      if (chunkName.facadeModuleId) {
+        if (chunkName.facadeModuleId.indexOf('projections')) return 'projections/[name].js'
+      }
+      return '[name].js'
+    }
+  },
+    [
+      dynamicImportVars(),
+      nodeResolve(),
+      commonjs(),
+      terser()
+    ]
+  )
 ]
