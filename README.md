@@ -1,13 +1,24 @@
+# Feedback wanted!
+Proj4js is the defacto (and only?) way to do client-side projection of coordinates between different a wide range of coordinate systems. It recieves close to 90k downloads a week. One of the downsides of existing proj4js library is that it's bundle size is fairly big (roughly 90kb minified).
+
+This experiment came from the thought that perhaps [dynamic imports](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import#dynamic_imports) might be a way to reduce the bundle size of proj4js. The way projection (and proj4) works is that each [underlying projection](https://github.com/proj4js/proj4js/tree/master/lib/projections) is a set of mathematical formulas. By making use of dynamic imports this allows us to only pull in the transformation code required for certain projections as required. This means users won't be penalised with loading the code for a *Lambert Conformal Conic* projection if they don't actually use it. But of course as soon as your users do want to use a *Lambert Conformal Conic* projection the code will be loaded. 
+
+By shifting to dynamic imports we are able to ship the core package in **26kb** minified (compared to the 86kb minified of `proj4`) which includes the core projections of web mercator and wgs84. Additional bits of code are loaded on demand as a user requests the use of different projections.
+
+Utiliising dynamic imports did however mean moving to a promise-based architecture. So I figured while we were at it we may well introduce some other functionality and breaking changes.
+- This library supports loading projections using EPSG codes thanks to [epsg.io](https://epsg.io/)
+- We also introduced a more explicit API with support for geojson
+
+### I'm interested in feedback on
+- Do you see value in reducing the core bundle size?
+- Do you like the proposed API documented below?
+- Any other comments?
+
 # proj4-on-demand 
 `proj4-on-demand` is a JavaScript library to transform point coordinates from one coordinate system to another, including datum transformations. This library is based on `proj` but aims to be more light-weight while incoporating extra functionality.
 
 ## Installing
-```bash
-npm install proj4-on-demand
-```
-
-If you do not want to download anything, `proj4-on-demand` is also available via various cdn services for direct use in browser applications. 
-eg `https://unpkg.com/proj4-on-demand`
+Not yet available via npm until I decide what to do with this....
 
 
 ## Quick Start
@@ -68,12 +79,3 @@ Where a **Projection Reference** is required it may be one of a
 | projectGeojson(Input Projection Reference, Output Projection Reference, GeoJsonObject) | Returns a Geojson object in a specified projection, to an equivalent object with coordinates in the requested projection. Supports `FeatureCollection`, `Feature`, and `Geometry` objects.  |
 | projectGeojson(Input Projection Reference, Output Projection Reference, GeoJsonObject) | Returns a Geojson object in a specified projection, to an equivalent object with coordinates in the requested projection. Supports `FeatureCollection`, `Feature`, and `Geometry` objects.  |
 | getTransformer(Input Projection Reference, Output Projection Reference) | Returns an object with a `forward` and `inverse` function which each take a coordinate to transform. |
-
-
-## Key Differences from `proj4`
-This project leans heavily on the existing `proj4` library but has been modified to enable it to leaverage more modern javascript features.
-One of the core goals was to be able to distribute a slimmer package, we do this by making use of dynamic imports which allow us to only pull in the transformation code required for certain projections as required. This means your users won't be penalised with loading the code for a *Lambert Conformal Conic* projection if they don't actually use it.But of course as soon as your users do want to use a *Lambert Conformal Conic* projection the code will be loaded. 
-This means that our package is 26kb minified vs 86kb minified of `proj4`. 🎉
-To achieve dynamic imports this did mean moving to a promise-based architecture. So we figured while we were at it we may well introduce some other functionality and breaking changes.
-- This library supports loading projections using EPSG codes thanks to [epsg.io](https://epsg.io/)
-- We also introduced a more explicit API with support for geojson

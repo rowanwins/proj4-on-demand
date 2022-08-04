@@ -23,7 +23,7 @@ export default [
       return '[name].js'
     }
   },
-    [dynamicImportVars(), terser()]
+    [dynamicImportVars()]
   ),
   output('./lib/ProjClass.js', {
     dir: './dist/browserbundle',
